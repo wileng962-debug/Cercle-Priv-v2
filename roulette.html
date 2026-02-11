@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roulette - Cercle Privé</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Cormorant+Garamond:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --midnight: #0a1128;
+            --gold: #d4af37;
+            --black: #000000;
+            --gold-dim: #8a7425;
+            --white: #f5f5f5;
+            --red: #c41e3a;
+            --green: #2d5016;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cormorant Garamond', serif;
+            background: var(--midnight);
+            color: var(--white);
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(212, 175, 55, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(212, 175, 55, 0.02) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        header {
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--gold-dim);
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 10;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--gold);
+            letter-spacing: 2px;
+            text-decoration: none;
+        }
+
+        .balance {
+            font-size: 1.3rem;
+            color: var(--gold);
+        }
+
+        .balance-amount {
+            font-weight: 600;
+            font-size: 1.6rem;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .game-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            text-align: center;
+            color: var(--gold);
+            margin-bottom: 2rem;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+        }
+
+        .game-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .wheel-section {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(10, 17, 40, 0.9));
+            border: 3px solid var(--gold);
+            border-radius: 10px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .wheel-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 2rem 0;
+        }
+
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(
+                var(--red) 0deg 9.73deg,
+                var(--black) 9.73deg 19.46deg,
+                var(--red) 19.46deg 29.19deg,
+                var(--black) 29.19deg 38.92deg,
+                var(--red) 38.92deg 48.65deg,
+                var(--black) 48.65deg 58.38deg,
+                var(--red) 58.38deg 68.11deg,
+                var(--black) 68.11deg 77.84deg,
+                var(--red) 77.84deg 87.57deg,
+                var(--black) 87.57deg 97.30deg,
+                var(--red) 97.30deg 107.03deg,
+                var(--black) 107.03deg 116.76deg,
+                var(--red) 116.76deg 126.49deg,
+                var(--black) 126.49deg 136.22deg,
+                var(--red) 136.22deg 145.95deg,
+                var(--black) 145.95deg 155.68deg,
+                var(--red) 155.68deg 165.41deg,
+                var(--black) 165.41deg 175.14deg,
+                var(--green) 175.14deg 184.87deg,
+                var(--red) 184.87deg 194.60deg,
+                var(--black) 194.60deg 204.33deg,
+                var(--red) 204.33deg 214.06deg,
+                var(--black) 214.06deg 223.79deg,
+                var(--red) 223.79deg 233.52deg,
+                var(--black) 233.52deg 243.25deg,
+                var(--red) 243.25deg 252.98deg,
+                var(--black) 252.98deg 262.71deg,
+                var(--red) 262.71deg 272.44deg,
+                var(--black) 272.44deg 282.17deg,
+                var(--red) 282.17deg 291.90deg,
+                var(--black) 291.90deg 301.63deg,
+                var(--red) 301.63deg 311.36deg,
+                var(--black) 311.36deg 321.09deg,
+                var(--red) 321.09deg 330.82deg,
+                var(--black) 330.82deg 340.55deg,
+                var(--red) 340.55deg 350.28deg,
+                var(--black) 350.28deg 360deg
+            );
+            border: 10px solid var(--gold);
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+            transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+        }
+
+        .wheel.spinning {
+            transform: rotate(3600deg);
+        }
+
+        .wheel-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: var(--gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: var(--midnight);
+            font-size: 1.5rem;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+        }
+
+        .wheel-marker {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 25px solid var(--gold);
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+        }
+
+        .betting-section {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(10, 17, 40, 0.9));
+            border: 3px solid var(--gold);
+            border-radius: 10px;
+            padding: 2rem;
+        }
+
+        .bet-amount-controls {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .bet-amount-controls h3 {
+            color: var(--gold);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .chip-selector {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .chip {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, var(--midnight), #1a2347);
+        }
+
+        .chip:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+        }
+
+        .chip.selected {
+            background: var(--gold);
+            color: var(--midnight);
+        }
+
+        .betting-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .bet-option {
+            padding: 1rem;
+            border: 2px solid var(--gold-dim);
+            background: rgba(0, 0, 0, 0.4);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .bet-option:hover {
+            border-color: var(--gold);
+            background: rgba(212, 175, 55, 0.2);
+        }
+
+        .bet-option.active {
+            background: var(--gold);
+            color: var(--midnight);
+            font-weight: 600;
+        }
+
+        .bet-option.red {
+            background: rgba(196, 30, 58, 0.3);
+        }
+
+        .bet-option.black {
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .number-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 0.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .number-bet {
+            padding: 0.8rem;
+            border: 1px solid var(--gold-dim);
+            background: rgba(0, 0, 0, 0.6);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .number-bet:hover {
+            border-color: var(--gold);
+            background: rgba(212, 175, 55, 0.2);
+        }
+
+        .number-bet.active {
+            background: var(--gold);
+            color: var(--midnight);
+        }
+
+        .number-bet.red {
+            background: rgba(196, 30, 58, 0.4);
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: 2px solid var(--gold);
+            background: var(--gold);
+            color: var(--midnight);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            width: 100%;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        .btn:hover:not(:disabled) {
+            background: transparent;
+            color: var(--gold);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-clear {
+            background: transparent;
+            color: var(--gold);
+        }
+
+        .btn-clear:hover {
+            background: var(--gold);
+            color: var(--midnight);
+        }
+
+        .result-message {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 1.5rem;
+            min-height: 2rem;
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        .result-message.win {
+            color: #4ade80;
+            text-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
+        }
+
+        .current-bets {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--gold-dim);
+            border-radius: 5px;
+        }
+
+        .current-bets h4 {
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .bet-list {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 968px) {
+            .game-area {
+                grid-template-columns: 1fr;
+            }
+
+            .wheel-container {
+                width: 250px;
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="index.html" class="logo">← Cercle Privé</a>
+            <div class="balance">
+                Saldo: <span class="balance-amount" id="balance">10,000</span> ₵
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1 class="game-title">🎡 ROULETTE 🎡</h1>
+
+        <div class="game-area">
+            <div class="wheel-section">
+                <h2 style="color: var(--gold); margin-bottom: 1rem;">Hjulet</h2>
+                <div class="wheel-container">
+                    <div class="wheel-marker"></div>
+                    <div class="wheel" id="wheel"></div>
+                    <div class="wheel-center" id="result">-</div>
+                </div>
+                <div class="result-message" id="resultMessage"></div>
+            </div>
+
+            <div class="betting-section">
+                <div class="bet-amount-controls">
+                    <h3>Välj marker</h3>
+                    <div class="chip-selector">
+                        <div class="chip selected" onclick="selectChip(10)">10</div>
+                        <div class="chip" onclick="selectChip(50)">50</div>
+                        <div class="chip" onclick="selectChip(100)">100</div>
+                        <div class="chip" onclick="selectChip(500)">500</div>
+                        <div class="chip" onclick="selectChip(1000)">1K</div>
+                    </div>
+                </div>
+
+                <h3 style="color: var(--gold); margin-bottom: 1rem;">Placera insatser</h3>
+                
+                <div class="betting-grid">
+                    <div class="bet-option red" onclick="placeBet('red', 2)">Röd (2:1)</div>
+                    <div class="bet-option black" onclick="placeBet('black', 2)">Svart (2:1)</div>
+                    <div class="bet-option" onclick="placeBet('green', 36)">Grön (36:1)</div>
+                    <div class="bet-option" onclick="placeBet('even', 2)">Jämn (2:1)</div>
+                    <div class="bet-option" onclick="placeBet('odd', 2)">Udda (2:1)</div>
+                    <div class="bet-option" onclick="placeBet('low', 2)">1-18 (2:1)</div>
+                    <div class="bet-option" onclick="placeBet('high', 2)">19-36 (2:1)</div>
+                </div>
+
+                <h4 style="color: var(--gold); margin: 1rem 0 0.5rem;">Nummer (36:1)</h4>
+                <div class="number-grid" id="numberGrid"></div>
+
+                <div class="current-bets">
+                    <h4>Totala insatser: <span id="totalBet">0</span> ₵</h4>
+                    <div class="bet-list" id="betList"></div>
+                </div>
+
+                <button class="btn" id="spinBtn" onclick="spin()">SNURRA HJULET</button>
+                <button class="btn btn-clear" onclick="clearBets()">Rensa insatser</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const redNumbers = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36];
+        const blackNumbers = [2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35];
+        
+        let balance = parseInt(localStorage.getItem('balance')) || 10000;
+        let selectedChip = 10;
+        let bets = {};
+        let isSpinning = false;
+
+        function updateBalance(amount) {
+            balance = amount;
+            document.getElementById('balance').textContent = balance.toLocaleString();
+            localStorage.setItem('balance', balance);
+        }
+
+        updateBalance(balance);
+
+        // Create number grid
+        const numberGrid = document.getElementById('numberGrid');
+        for (let i = 0; i <= 36; i++) {
+            const btn = document.createElement('div');
+            btn.className = 'number-bet';
+            if (redNumbers.includes(i)) btn.classList.add('red');
+            btn.textContent = i;
+            btn.onclick = () => placeBet(`num_${i}`, 36);
+            btn.id = `num_${i}`;
+            numberGrid.appendChild(btn);
+        }
+
+        function selectChip(value) {
+            selectedChip = value;
+            document.querySelectorAll('.chip').forEach(chip => {
+                chip.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+        }
+
+        function placeBet(type, payout) {
+            if (balance < selectedChip) {
+                alert('Otillräckligt saldo!');
+                return;
+            }
+
+            if (!bets[type]) {
+                bets[type] = { amount: 0, payout: payout };
+            }
+
+            bets[type].amount += selectedChip;
+            updateBalance(balance - selectedChip);
+            updateBetDisplay();
+        }
+
+        function updateBetDisplay() {
+            let total = 0;
+            let betText = '';
+
+            for (let [type, bet] of Object.entries(bets)) {
+                total += bet.amount;
+                betText += `${type}: ${bet.amount} ₵ | `;
+            }
+
+            document.getElementById('totalBet').textContent = total.toLocaleString();
+            document.getElementById('betList').textContent = betText || 'Inga insatser än';
+
+            // Highlight active bets
+            document.querySelectorAll('.bet-option, .number-bet').forEach(el => {
+                el.classList.remove('active');
+            });
+
+            for (let type of Object.keys(bets)) {
+                const el = document.getElementById(type) || 
+                          Array.from(document.querySelectorAll('.bet-option')).find(e => 
+                              e.textContent.toLowerCase().includes(type));
+                if (el) el.classList.add('active');
+            }
+        }
+
+        function clearBets() {
+            // Return all bets to balance
+            let total = 0;
+            for (let bet of Object.values(bets)) {
+                total += bet.amount;
+            }
+            updateBalance(balance + total);
+            
+            bets = {};
+            updateBetDisplay();
+            document.querySelectorAll('.bet-option, .number-bet').forEach(el => {
+                el.classList.remove('active');
+            });
+        }
+
+        function spin() {
+            if (isSpinning) return;
+            
+            if (Object.keys(bets).length === 0) {
+                alert('Placera minst en insats!');
+                return;
+            }
+
+            isSpinning = true;
+            document.getElementById('spinBtn').disabled = true;
+            document.getElementById('resultMessage').textContent = 'Snurrar...';
+
+            const wheel = document.getElementById('wheel');
+            const resultNum = Math.floor(Math.random() * 37); // 0-36
+            
+            // Calculate rotation
+            const baseRotation = 3600; // 10 full spins
+            const segmentAngle = 360 / 37;
+            const targetRotation = baseRotation + (resultNum * segmentAngle);
+            
+            wheel.style.transform = `rotate(${targetRotation}deg)`;
+
+            setTimeout(() => {
+                checkWin(resultNum);
+                wheel.style.transform = 'rotate(0deg)';
+                wheel.style.transition = 'none';
+                setTimeout(() => {
+                    wheel.style.transition = 'transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99)';
+                }, 50);
+                
+                isSpinning = false;
+                document.getElementById('spinBtn').disabled = false;
+            }, 4000);
+        }
+
+        function checkWin(num) {
+            document.getElementById('result').textContent = num;
+            const resultMessage = document.getElementById('resultMessage');
+            
+            let totalWin = 0;
+            let wonBets = [];
+
+            // Check each bet
+            for (let [type, bet] of Object.entries(bets)) {
+                let won = false;
+
+                if (type === `num_${num}`) won = true;
+                else if (type === 'red' && redNumbers.includes(num)) won = true;
+                else if (type === 'black' && blackNumbers.includes(num)) won = true;
+                else if (type === 'green' && num === 0) won = true;
+                else if (type === 'even' && num !== 0 && num % 2 === 0) won = true;
+                else if (type === 'odd' && num % 2 === 1) won = true;
+                else if (type === 'low' && num >= 1 && num <= 18) won = true;
+                else if (type === 'high' && num >= 19 && num <= 36) won = true;
+
+                if (won) {
+                    const winAmount = bet.amount * bet.payout;
+                    totalWin += winAmount;
+                    wonBets.push(`${type} (${winAmount} ₵)`);
+                }
+            }
+
+            if (totalWin > 0) {
+                updateBalance(balance + totalWin);
+                resultMessage.textContent = `🎉 Vann ${totalWin.toLocaleString()} ₵!`;
+                resultMessage.className = 'result-message win';
+            } else {
+                resultMessage.textContent = `Nummer: ${num} - Ingen vinst`;
+                resultMessage.className = 'result-message';
+            }
+
+            // Clear bets after spin
+            bets = {};
+            updateBetDisplay();
+        }
+    </script>
+</body>
+</html>

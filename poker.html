@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poker - Cercle Privé</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Cormorant+Garamond:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --midnight: #0a1128;
+            --gold: #d4af37;
+            --gold-dim: #8a7425;
+            --white: #f5f5f5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cormorant Garamond', serif;
+            background: var(--midnight);
+            color: var(--white);
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 30%, rgba(212, 175, 55, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        header {
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--gold-dim);
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--gold);
+            text-decoration: none;
+        }
+
+        .balance {
+            font-size: 1.3rem;
+            color: var(--gold);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .game-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            text-align: center;
+            color: var(--gold);
+            margin-bottom: 2rem;
+        }
+
+        .table {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(10, 17, 40, 0.9));
+            border: 3px solid var(--gold);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .cards {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            width: 70px;
+            height: 100px;
+            background: white;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #000;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .card.red {
+            color: #c41e3a;
+        }
+
+        .card.selected {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 16px rgba(212, 175, 55, 0.6);
+            border: 2px solid var(--gold);
+        }
+
+        .hand-value {
+            text-align: center;
+            font-size: 1.5rem;
+            color: var(--gold);
+            margin-top: 1rem;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border: 2px solid var(--gold);
+            background: var(--gold);
+            color: var(--midnight);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            background: transparent;
+            color: var(--gold);
+        }
+
+        .controls {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .result {
+            text-align: center;
+            font-size: 2rem;
+            margin-top: 2rem;
+            color: var(--gold);
+            min-height: 3rem;
+        }
+
+        .result.win {
+            color: #4ade80;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="index.html" class="logo">← Cercle Privé</a>
+            <div class="balance">
+                Saldo: <span id="balance">10,000</span> ₵
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1 class="game-title">♠️ POKER ♠️</h1>
+
+        <div class="table">
+            <h2 style="text-align: center; color: var(--gold); margin-bottom: 1rem;">Video Poker - Jacks or Better</h2>
+            
+            <div class="cards" id="cards"></div>
+            <div class="hand-value" id="handValue"></div>
+
+            <div class="controls">
+                <div style="margin-bottom: 1rem;">
+                    <label style="color: var(--gold); margin-right: 1rem;">Insats:</label>
+                    <input type="number" id="bet" value="100" min="10" step="10" style="padding: 0.5rem; width: 100px; font-size: 1.1rem;">
+                </div>
+                <button class="btn" id="dealBtn" onclick="deal()">DELA UT</button>
+                <button class="btn" id="drawBtn" onclick="draw()" style="display: none;">DRA KORT</button>
+            </div>
+
+            <div class="result" id="result"></div>
+
+            <div style="margin-top: 2rem; padding: 1rem; background: rgba(0,0,0,0.3); border: 1px solid var(--gold-dim);">
+                <h3 style="color: var(--gold); margin-bottom: 0.5rem;">Utbetalningar</h3>
+                <div style="font-size: 0.9rem;">
+                    Royal Flush: 800x | Straight Flush: 50x | Four of a Kind: 25x<br>
+                    Full House: 9x | Flush: 6x | Straight: 4x<br>
+                    Three of a Kind: 3x | Two Pair: 2x | Jacks or Better: 1x
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const suits = ['♠', '♥', '♦', '♣'];
+        const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+        let balance = parseInt(localStorage.getItem('balance')) || 10000;
+        let deck = [];
+        let hand = [];
+        let selected = [];
+
+        document.getElementById('balance').textContent = balance.toLocaleString();
+
+        function createDeck() {
+            deck = [];
+            for (let suit of suits) {
+                for (let value of values) {
+                    deck.push({ suit, value });
+                }
+            }
+            for (let i = deck.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [deck[i], deck[j]] = [deck[j], deck[i]];
+            }
+        }
+
+        function deal() {
+            const bet = parseInt(document.getElementById('bet').value);
+            if (bet > balance) {
+                alert('Otillräckligt saldo!');
+                return;
+            }
+
+            balance -= bet;
+            localStorage.setItem('balance', balance);
+            document.getElementById('balance').textContent = balance.toLocaleString();
+
+            createDeck();
+            hand = [deck.pop(), deck.pop(), deck.pop(), deck.pop(), deck.pop()];
+            selected = [false, false, false, false, false];
+
+            renderHand();
+            document.getElementById('dealBtn').style.display = 'none';
+            document.getElementById('drawBtn').style.display = 'inline-block';
+            document.getElementById('result').textContent = 'Välj kort att behålla';
+        }
+
+        function draw() {
+            for (let i = 0; i < 5; i++) {
+                if (!selected[i]) {
+                    hand[i] = deck.pop();
+                }
+            }
+
+            renderHand();
+            checkHand();
+            
+            document.getElementById('dealBtn').style.display = 'inline-block';
+            document.getElementById('drawBtn').style.display = 'none';
+        }
+
+        function renderHand() {
+            const cardsEl = document.getElementById('cards');
+            cardsEl.innerHTML = hand.map((card, i) => {
+                const isRed = card.suit === '♥' || card.suit === '♦';
+                return `<div class="card ${isRed ? 'red' : ''} ${selected[i] ? 'selected' : ''}" 
+                            onclick="toggleCard(${i})">
+                    ${card.suit}<br>${card.value}
+                </div>`;
+            }).join('');
+        }
+
+        function toggleCard(index) {
+            if (document.getElementById('drawBtn').style.display === 'inline-block') {
+                selected[index] = !selected[index];
+                renderHand();
+            }
+        }
+
+        function checkHand() {
+            const bet = parseInt(document.getElementById('bet').value);
+            const valueCount = {};
+            const suitCount = {};
+            
+            hand.forEach(card => {
+                valueCount[card.value] = (valueCount[card.value] || 0) + 1;
+                suitCount[card.suit] = (suitCount[card.suit] || 0) + 1;
+            });
+
+            const counts = Object.values(valueCount).sort((a,b) => b-a);
+            const isFlush = Object.values(suitCount).includes(5);
+            const values_idx = hand.map(c => values.indexOf(c.value)).sort((a,b) => a-b);
+            const isStraight = values_idx[4] - values_idx[0] === 4 && new Set(values_idx).size === 5;
+
+            let payout = 0;
+            let handName = 'Ingen vinst';
+
+            if (isStraight && isFlush && values_idx[0] === 8) {
+                payout = 800; handName = 'ROYAL FLUSH!';
+            } else if (isStraight && isFlush) {
+                payout = 50; handName = 'Straight Flush!';
+            } else if (counts[0] === 4) {
+                payout = 25; handName = 'Four of a Kind!';
+            } else if (counts[0] === 3 && counts[1] === 2) {
+                payout = 9; handName = 'Full House!';
+            } else if (isFlush) {
+                payout = 6; handName = 'Flush!';
+            } else if (isStraight) {
+                payout = 4; handName = 'Straight!';
+            } else if (counts[0] === 3) {
+                payout = 3; handName = 'Three of a Kind!';
+            } else if (counts[0] === 2 && counts[1] === 2) {
+                payout = 2; handName = 'Two Pair!';
+            } else if (counts[0] === 2) {
+                const pair = Object.keys(valueCount).find(k => valueCount[k] === 2);
+                if (['J', 'Q', 'K', 'A'].includes(pair)) {
+                    payout = 1; handName = 'Jacks or Better!';
+                }
+            }
+
+            if (payout > 0) {
+                const win = bet * payout;
+                balance += win;
+                localStorage.setItem('balance', balance);
+                document.getElementById('balance').textContent = balance.toLocaleString();
+                document.getElementById('result').textContent = `${handName} Vann ${win} ₵!`;
+                document.getElementById('result').className = 'result win';
+            } else {
+                document.getElementById('result').textContent = handName;
+                document.getElementById('result').className = 'result';
+            }
+        }
+    </script>
+</body>
+</html>
