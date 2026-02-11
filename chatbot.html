@@ -128,7 +128,9 @@
             display: inline-block;
             padding: 1rem 1.5rem;
             border-radius: 10px;
-            max-width: 70%;
+            max-width: 80%;
+            white-space: pre-wrap;
+            line-height: 1.6;
         }
 
         .message.bot .message-content {
@@ -258,7 +260,7 @@
         <div class="header-content">
             <a href="index.html" class="logo">← Cercle Privé</a>
             <div class="balance">
-                Saldo: <span id="balance">10,000</span> ₵
+                Saldo: <span id="balance">10,000</span> kr
             </div>
         </div>
     </header>
@@ -271,9 +273,15 @@
             <div class="chat-messages" id="chatMessages">
                 <div class="message bot">
                     <div class="message-sender">Concierge</div>
-                    <div class="message-content">
-                        Välkommen till Cercle Privé! Jag är din personliga concierge. Hur kan jag hjälpa dig idag?
-                    </div>
+                    <div class="message-content">Välkommen till Cercle Privé! Jag är din personliga concierge och kan hjälpa dig med:
+
+📚 Detaljerade spelregler
+💡 Strategier och tips
+💰 Saldo och bankfrågor
+🎯 Rekommendationer för spel
+🎲 Allt om Blackjack, Roulette, Slots, Poker och Craps
+
+Vad vill du veta?</div>
                 </div>
             </div>
 
@@ -285,9 +293,11 @@
 
         <div class="quick-questions">
             <button class="quick-btn" onclick="askQuestion('Vilka spel finns?')">Vilka spel finns?</button>
-            <button class="quick-btn" onclick="askQuestion('Hur spelar man blackjack?')">Hur spelar man blackjack?</button>
-            <button class="quick-btn" onclick="askQuestion('Vad är mitt saldo?')">Vad är mitt saldo?</button>
-            <button class="quick-btn" onclick="askQuestion('Förklara roulette')">Förklara roulette</button>
+            <button class="quick-btn" onclick="askQuestion('Hur spelar man blackjack?')">Blackjack-regler</button>
+            <button class="quick-btn" onclick="askQuestion('blackjack strategi')">Blackjack-strategi</button>
+            <button class="quick-btn" onclick="askQuestion('roulette tips')">Roulette-tips</button>
+            <button class="quick-btn" onclick="askQuestion('slots jackpot')">Slots jackpot</button>
+            <button class="quick-btn" onclick="askQuestion('poker händer')">Poker-händer</button>
         </div>
     </div>
 
@@ -296,19 +306,81 @@
         document.getElementById('balance').textContent = balance.toLocaleString();
 
         const responses = {
-            'vilka spel': 'Vi erbjuder fem fantastiska spel: Slots 🎰, Roulette 🎡, Blackjack 🃏, Poker ♠️ och Craps 🎲. Alla spel är gratis att spela med virtuella pengar!',
-            'spel': 'Vi har Slots, Roulette, Blackjack, Poker och Craps. Vilket vill du veta mer om?',
-            'blackjack': 'I Blackjack spelar du mot dealern. Målet är att få 21 poäng eller närmare 21 än dealern utan att gå över. Ess räknas som 1 eller 11, klädda kort som 10. Du kan välja "Kort" för fler kort eller "Stanna" för att sluta.',
-            'roulette': 'Roulette är ett klassiskt casinospel där du satsar på var bollen landar. Du kan satsa på röd/svart, jämn/udda, specifika nummer eller grupper. Europeisk roulette har 37 nummer (0-36).',
-            'poker': 'Vi erbjuder Video Poker (Jacks or Better). Du får 5 kort, väljer vilka du vill behålla, och drar nya kort. Målet är att få bästa möjliga pokerhand. Par med knekt eller högre ger vinst!',
-            'slots': 'Slots är enkelt! Välj din insats, tryck på "Snurra" och hoppas på att symbolerna matchar. Tre lika symboler ger vinst. Diamanter ger högst utbetalning (50x), följt av stjärnor (25x).',
-            'craps': 'Craps är ett tärningsspel. Pass Line-bet vinner på 7 eller 11 på första kastet. Field-bet vinner på 2,3,4,9,10,11,12. Det är ett snabbt och spännande spel!',
-            'saldo': `Ditt nuvarande saldo är ${balance.toLocaleString()} ₵. Du kan köpa fler chips via Banken i huvudmenyn.`,
-            'regler': 'Vilket spel vill du veta reglerna för? Vi har Slots, Roulette, Blackjack, Poker och Craps.',
-            'hjälp': 'Jag kan hjälpa dig med spelregler, förklara hur olika spel fungerar, visa ditt saldo och svara på frågor om Cercle Privé. Vad vill du veta?',
-            'hej': 'Hej och välkommen! Hur kan jag hjälpa dig idag?',
-            'tack': 'Varsågod! Är det något mer du undrar över?',
-            'default': 'Förlåt, jag förstod inte riktigt. Kan du formulera om frågan? Jag kan hjälpa dig med spelregler, saldo och allmän information om våra spel.'
+            // Hälsningar
+            'hej': 'Hej och välkommen till Cercle Privé! Jag är din personliga concierge. Hur kan jag hjälpa dig idag? Jag kan berätta om våra spel, förklara regler, visa ditt saldo och ge tips!',
+            'hallå': 'Hallå! Välkommen! Vad kan jag hjälpa dig med?',
+            'god morgon': 'God morgon! Redo för en dag av spänning på Cercle Privé?',
+            'god kväll': 'God kväll! Perfekt tid för lite spänning. Vilket spel lockar?',
+            'tjena': 'Tjena! Vad kan jag göra för dig?',
+            
+            // Spel - Allmänt
+            'vilka spel': 'Vi erbjuder fem fantastiska spel:\n\n🎰 SLOTS - Klassiska enarmade banditer med stora jackpottar\n🎡 ROULETTE - Europeisk roulette med eleganta insatser\n🃏 BLACKJACK - Spela mot dealern, försök nå 21\n♠️ POKER - Video Poker (Jacks or Better)\n🎲 CRAPS - Spännande tärningsspel\n\nVilket vill du veta mer om?',
+            'spel': 'Vi har Slots, Roulette, Blackjack, Poker och Craps. Alla spelas med virtuella kronor. Vilket intresserar dig mest?',
+            'bästa spel': 'Det beror på vad du gillar!\n\n• SLOTS - Enklast för nybörjare\n• BLACKJACK - Bäst odds, kräver strategi\n• ROULETTE - Elegant och visuellt\n• POKER - För pokerhands-älskare\n• CRAPS - Snabbt och spännande\n\nVill du att jag förklarar något spel närmare?',
+            'vilket spel': 'Bra fråga! För nybörjare rekommenderar jag Slots eller Roulette - enkla och roliga. För mer utmaning, testa Blackjack eller Poker. Vill du veta mer om något specifikt spel?',
+            'lätt spel': 'De enklaste spelen är Slots och Roulette. Slots kräver bara att du väljer insats och trycker på snurra. Roulette är också enkelt - satsa på röd/svart eller jämn/udda för 50% vinstchans!',
+            
+            // Blackjack
+            'blackjack': 'BLACKJACK - Det Klassiska Kortspelet:\n\nMÅL: Få 21 poäng eller närmare än dealern utan att gå över.\n\nKORTVÄRDEN:\n• Ess = 1 eller 11 poäng\n• Klädda kort (J, Q, K) = 10 poäng\n• Övriga kort = sitt nummer\n\nVAL:\n• KORT - Ta ett kort till\n• STANNA - Nöjd med handen\n• DUBBLA - Dubbla insatsen, ta ett kort, sen stanna\n\nTIPS: Stanna på 17+, dealern måste dra till 17. Blackjack (21 på första två korten) ger omedelbar vinst!',
+            'hur spelar man blackjack': 'Blackjack är enkelt! Du får 2 kort, dealern får 2 (ett dolt). Klicka "KORT" för fler kort eller "STANNA" när du är nöjd. Målet är att komma närmare 21 än dealern utan att gå över. Dealern måste dra kort till minst 17 poäng.',
+            'blackjack strategi': 'GRUNDSTRATEGI:\n\n• Stanna på 17 eller högre\n• Ta kort på 11 eller lägre\n• På 12-16: Ta kort om dealern visar 7+, annars stanna\n• Dubbla på 10-11 om dealern visar lågt kort\n• Ess är värdefulla - de räknas som 1 eller 11!',
+            'blackjack tips': 'TIPS FÖR BLACKJACK:\n\n1. Lär dig grundstrategin\n2. Dealern måste följa regler (dra till 17)\n3. Statistiskt har dealern fördel vid 12-16\n4. Dubbla när du har fördel (10-11 poäng)\n5. Ess + 10/klädda kort = Blackjack = direkt vinst!',
+            
+            // Roulette
+            'roulette': 'ROULETTE - Den Eleganta Klassikern:\n\nSPELBORD: Europeisk roulette med nummer 0-36\n\nINSATSTYPER:\n• RÖD/SVART - 50% vinstchans, betalar 2:1\n• JÄMN/UDDA - 50% vinstchans, betalar 2:1\n• 1-18 / 19-36 - Låg/Hög, betalar 2:1\n• GRÖN (0) - Sällsynt, betalar 36:1\n• SPECIFIKT NUMMER - Svårt, betalar 36:1\n\nTIPS: Börja med röd/svart eller jämn/udda för säkrare vinster!',
+            'hur spelar man roulette': 'Välj först dina marker (10-1000 kr). Klicka sedan på vad du vill satsa på - röd, svart, jämn, udda, eller specifika nummer. Tryck "SNURRA HJULET" och se var bollen landar! Enklast är att satsa på röd/svart för 50% vinstchans.',
+            'roulette strategi': 'STRATEGI:\n\n• Nybörjare: Satsa på röd/svart eller jämn/udda (bäst odds)\n• Mellannivå: Kombinera flera insatser (röd + specifikt nummer)\n• Avancerat: Satsa på grupper (1-12, 13-24, 25-36)\n\nKom ihåg: Alla insatser är oberoende - tidigare snurr påverkar inte nästa!',
+            'roulette tips': 'ROULETTE TIPS:\n\n• Bäst odds: Röd/Svart eller Jämn/Udda (nästan 50/50)\n• Högst vinst: Enstaka nummer (36:1)\n• Grön (0) ger också 36:1 men är sällsynt\n• Kombinera insatser för mer spänning!\n• Ingen strategi garanterar vinst - ha kul!',
+            'roulette odds': 'UTBETALNINGAR:\n\n• Röd/Svart: 2:1 (dubblerar insatsen)\n• Jämn/Udda: 2:1\n• 1-18 eller 19-36: 2:1\n• Grön (0): 36:1\n• Specifikt nummer: 36:1\n\nBäst chans att vinna: Röd/Svart eller Jämn/Udda!',
+            
+            // Slots
+            'slots': 'SLOTS - Enarmade Banditer:\n\nSÅ SPELAR DU:\n1. Välj insats (10-10,000 kr)\n2. Tryck "SNURRA"\n3. Tre lika symboler = VINST!\n\nSYMBOLER & UTBETALNINGAR:\n💎💎💎 = 50x insatsen (JACKPOT!)\n⭐⭐⭐ = 25x insatsen\n🍀🍀🍀 = 15x insatsen\n🍒🍒🍒 = 10x insatsen\n🍋🍋🍋 = 8x insatsen\n🍊🍊🍊 = 5x insatsen\nTvå lika = 2x insatsen\n\nTIPS: Högre insats = högre potentiell vinst!',
+            'hur spelar man slots': 'Slots är det enklaste spelet! Välj din insats med +/- knapparna, tryck "SNURRA" och hoppas på att tre lika symboler dyker upp. Diamanter är bäst (50x insats), två lika ger också vinst (2x insats).',
+            'slots tips': 'SLOTS TIPS:\n\n• Börja med låg insats för att lära känna spelet\n• Tre diamanter är jackpotten (50x)\n• Även två lika symboler ger vinst (2x)\n• Högre insats = högre vinster, men också högre risk\n• Spela för skojs skull - slots är rent lyckobaserat!',
+            'slots jackpot': 'JACKPOTTEN i Slots är tre diamanter 💎💎💎 som ger 50x din insats!\n\nExempel:\n• Satsar 100 kr → Vinner 5,000 kr\n• Satsar 1,000 kr → Vinner 50,000 kr\n• Satsar 10,000 kr → Vinner 500,000 kr\n\nStjärnor ⭐⭐⭐ ger 25x och är näst bäst. Lycka till!',
+            
+            // Poker
+            'poker': 'VIDEO POKER - Jacks or Better:\n\nSÅ SPELAR DU:\n1. Välj insats och tryck "DELA UT"\n2. Få 5 kort\n3. Klicka på kort du vill BEHÅLLA\n4. Tryck "DRA KORT" för nya kort\n5. Vinst om du får par med Knekt eller bättre\n\nHANDRANKNING (bäst till sämst):\n👑 Royal Flush (800x)\n🔥 Straight Flush (50x)\n4️⃣ Four of a Kind (25x)\n🏠 Full House (9x)\n💧 Flush (6x)\n➡️ Straight (4x)\n3️⃣ Three of a Kind (3x)\n2️⃣2️⃣ Two Pair (2x)\n🃏🃏 Jacks or Better (1x)',
+            'hur spelar man poker': 'Video Poker: Få 5 kort, klicka på de du vill behålla (de lyser upp), tryck DRA KORT för att byta resten. Målet är att få par med Knekt eller bättre. Ju bättre hand, desto mer vinner du!',
+            'poker strategi': 'POKER STRATEGI:\n\n• Behåll alltid par av Knekt eller högre\n• Behåll 4 kort till flush/straight\n• Kasta alla kort om du har skräp\n• Behåll höga kort (J, Q, K, A)\n• Royal Flush är drömen men sällan - sikta på par/two pair',
+            'poker händer': 'POKERHÄNDER (bäst först):\n\n1. Royal Flush - 10, J, Q, K, A samma färg\n2. Straight Flush - 5 i rad samma färg\n3. Four of a Kind - 4 lika kort\n4. Full House - 3 lika + par\n5. Flush - 5 kort samma färg\n6. Straight - 5 kort i rad\n7. Three of a Kind - 3 lika\n8. Two Pair - 2 olika par\n9. Jacks or Better - Par med J, Q, K eller A',
+            
+            // Craps
+            'craps': 'CRAPS - Tärningsspelet:\n\nINSATSTYPER:\n• PASS LINE - Vinn på 7 eller 11 första kastet (2:1)\n• DON\'T PASS - Vinn på 2 eller 3 första kastet (2:1)\n• FIELD - Vinn på 2,3,4,9,10,11,12 (1:1, 2x på 2 och 12)\n• ANY 7 - Vinn om nästa kast blir 7 (4:1)\n\nSÅ SPELAR DU:\n1. Välj insats och typ\n2. Tryck "KASTA TÄRNINGAR"\n3. Se resultatet!\n\nTIPS: Pass Line är enklast för nybörjare!',
+            'hur spelar man craps': 'Välj en insatstyp (Pass Line är enklast), välj insats och tryck KASTA TÄRNINGAR. Pass Line vinner på 7 eller 11, förlorar på 2, 3 eller 12. Andra nummer sätter ett "point" som du försöker träffa igen.',
+            'craps strategi': 'CRAPS STRATEGI:\n\n• Nybörjare: Pass Line (7 eller 11 på första kast)\n• Field Bet: Vinner på många nummer (2,3,4,9,10,11,12)\n• Any 7: Riskabelt men höga odds (4:1)\n• Don\'t Pass: Motsatsen till Pass Line\n\nPass Line har bäst odds långsiktigt!',
+            
+            // Saldo & Bank
+            'saldo': `Ditt nuvarande saldo är ${balance.toLocaleString()} kr. Du kan köpa fler chips via Banken i huvudmenyn om du går back! Känn dig som en riktig high-roller!`,
+            'pengar': `Du har ${balance.toLocaleString()} kr just nu. Vill du köpa mer via Banken? Där kan du köpa 1,000 - 50,000 kr i chips!`,
+            'köpa': 'Du kan köpa fler chips via BANKEN i huvudmenyn! Välj mellan 1,000, 5,000, 10,000 eller 50,000 kr. Detta är virtuella pengar för underhållning - inga riktiga pengar!',
+            'bank': 'Banken finns i huvudmenyn (uppe i högra hörnet). Där kan du köpa fler virtuella kronor om ditt saldo börjar bli lågt. Välj mellan 1,000 kr upp till 50,000 kr!',
+            'hur får jag mer pengar': 'Klicka på "Bank" i huvudmenyn för att köpa fler virtuella kronor! Du kan även vinna pengar genom att spela spelen. Kom ihåg - detta är virtuella pengar för skoj skull!',
+            
+            // Regler & Info
+            'regler': 'Vilket spel vill du veta reglerna för? Jag kan förklara Slots, Roulette, Blackjack, Poker eller Craps i detalj. Skriv namnet på spelet!',
+            'hjälp': 'Jag kan hjälpa dig med:\n\n📚 SPELREGLER - Detaljerade förklaringar\n💰 SALDO - Visa ditt nuvarande saldo\n💡 STRATEGI - Tips för att vinna\n🎯 VAL AV SPEL - Hitta rätt spel för dig\n🏦 BANK - Hur du köper fler chips\n\nVad vill du veta mer om?',
+            'tips': 'ALLMÄNNA TIPS:\n\n1. BÖRJA SMÅTT - Testa spel med låga insatser först\n2. LÄR DIG REGLERNA - Förstå spelet innan stora insatser\n3. SLOTS - Enklast, rent lyckobaserat\n4. BLACKJACK - Kräver strategi men bäst odds\n5. HA KUL - Detta är virtuella pengar, enjoy!\n\nVilket spel intresserar dig?',
+            
+            // Om Cercle Privé
+            'cercle': 'Cercle Privé är ett exklusivt virtuellt casino skapat som skolprojekt. Här spelar du med virtuella kronor - inga riktiga pengar! Vi erbjuder fem klassiska casinospel med elegant design inspirerad av "old money"-estetik. Välkommen!',
+            'vad är cercle': 'Cercle Privé betyder "Den Privata Cirkeln" på franska. Det är ett exklusivt virtuellt casino där du kan spela klassiska casinospel med virtuella pengar. Perfekt för att lära sig spelregler utan risk!',
+            'skolprojekt': 'Ja, detta är ett skolprojekt om AI-assisterad webbutveckling! Hemsidan skapades med hjälp av Claude (AI) och visar hur man kan bygga interaktiva webbapplikationer. Coolt, eller hur?',
+            'virtuella pengar': 'Alla pengar här är virtuella - inga riktiga pengar används! Du kan inte förlora några riktiga pengar och kan inte vinna riktiga pengar. Detta är rent för underhållning och utbildning. Spela fritt!',
+            
+            // Tack & Avslut
+            'tack': 'Varsågod! Är det något mer du undrar över? Jag finns här för att hjälpa dig få ut det mesta av Cercle Privé!',
+            'tack så mycket': 'Det var så lite så! Lycka till med spelen och kom tillbaka om du har fler frågor. Ha kul!',
+            'hejdå': 'Hejdå! Lycka till med spelen och kom gärna tillbaka om du behöver hjälp. Ha en fantastisk dag!',
+            'adjö': 'Adjö! Tack för att du besökte Cercle Privé. Återkom snart!',
+            
+            // Nybörjare
+            'nybörjare': 'Välkommen som nybörjare! Jag rekommenderar:\n\n1. BÖRJA MED SLOTS - Enklast spelet\n2. TESTA ROULETTE - Satsa på röd/svart\n3. LÄR DIG BLACKJACK - Mest strategi\n\nVill du att jag förklarar något spel i detalj?',
+            'första gången': 'Första gången här? Perfekt! Börja med Slots eller Roulette - de är enklast. Du har 10,000 kr att spela för. Testa lite av varje spel med låga insatser först. Vad sägs om att börja med Slots?',
+            'hur börjar': 'Så här börjar du:\n\n1. Gå till lobby (klicka loggan)\n2. Välj ett spel (Slots rekommenderas för nybörjare)\n3. Välj insats och spela!\n4. Om du behöver fler pengar, klicka "Bank"\n\nVill du att jag guidar dig genom ett specifikt spel?',
+            
+            // Default
+            'default': 'Hmm, jag är inte säker på vad du menar. Jag kan hjälpa dig med:\n\n• Spelregler (Slots, Roulette, Blackjack, Poker, Craps)\n• Strategi och tips\n• Visa ditt saldo\n• Förklara hur spelen fungerar\n• Rekommendera spel\n\nKan du formulera om din fråga?'
         };
 
         function addMessage(content, isUser = false) {
